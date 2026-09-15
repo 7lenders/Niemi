@@ -1,0 +1,1512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lean MVP / National Interoperability Pilot — National EV Charging Interoperability Framework</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,300&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- ============================================================
+     LEAN MVP SECTION — scoped stylesheet.
+     Every rule is namespaced under .lmvp so it cannot collide with
+     the styles already present in index.html.
+     ============================================================ -->
+<style>
+.lmvp{
+  --ink:#121B17;
+  --green-900:#05231A;
+  --green-800:#0A3627;
+  --green-700:#114A37;
+  --green-600:#186B4F;
+  --green-400:#3E9C78;
+  --gold:#C2992F;
+  --gold-lit:#E4C463;
+  --paper:#F7F3E9;
+  --paper-2:#EDE7D8;
+  --rule:#D6CDB8;
+  --rule-dark:rgba(226,214,183,.20);
+  --dim:#5B6660;
+  --dim-on-dark:#A9BDB2;
+
+  --serif:"Newsreader",Georgia,"Times New Roman",serif;
+  --sans:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+
+  --measure:68ch;
+  --pad:clamp(1.25rem,5vw,4.5rem);
+
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:clamp(15px,.55vw + 13.6px,17px);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+.lmvp *,.lmvp *::before,.lmvp *::after{box-sizing:border-box}
+.lmvp p,.lmvp ul,.lmvp ol,.lmvp h1,.lmvp h2,.lmvp h3,.lmvp h4,.lmvp figure,.lmvp table,.lmvp pre{margin:0}
+
+/* ---------- structure ---------- */
+.lmvp-band{padding:clamp(3.5rem,7vw,6.5rem) var(--pad)}
+.lmvp-band--dark{background:var(--green-900);color:var(--paper)}
+.lmvp-band--deep{background:linear-gradient(168deg,var(--green-900) 0%,#04190F 100%);color:var(--paper)}
+.lmvp-band--tint{background:var(--paper-2)}
+.lmvp-inner{max-width:1160px;margin:0 auto}
+.lmvp-narrow{max-width:var(--measure)}
+.lmvp-stack>*+*{margin-top:1.1rem}
+.lmvp-stack>.lmvp-lead+*{margin-top:1.7rem}
+.lmvp-stack>h2+*,.lmvp-stack>h3+*{margin-top:1.3rem}
+.lmvp-stack-lg>*+*{margin-top:2.75rem}
+
+/* ---------- type ---------- */
+.lmvp h2,.lmvp h3,.lmvp h4{font-family:var(--serif);font-weight:400;letter-spacing:-.012em;line-height:1.14}
+.lmvp h2{font-size:clamp(2rem,3.6vw,3.1rem)}
+.lmvp h3{font-size:clamp(1.4rem,2.1vw,1.95rem);line-height:1.2}
+.lmvp h4{font-size:1.1rem;line-height:1.3}
+.lmvp-lead{font-family:var(--serif);font-size:clamp(1.15rem,1.5vw,1.4rem);line-height:1.5;color:var(--green-700)}
+.lmvp-band--dark .lmvp-lead,.lmvp-band--deep .lmvp-lead{color:var(--dim-on-dark)}
+.lmvp-dim{color:var(--dim)}
+.lmvp-band--dark .lmvp-dim,.lmvp-band--deep .lmvp-dim{color:var(--dim-on-dark)}
+.lmvp b,.lmvp strong{font-weight:600}
+
+/* section marker: a rule + short kicker, used only on genuine sequences */
+.lmvp-kicker{
+  font-family:var(--mono);font-size:.74rem;letter-spacing:.06em;
+  color:var(--green-600);padding-bottom:.55rem;margin-bottom:1.6rem;
+  border-bottom:1px solid var(--rule);display:block;
+}
+.lmvp-band--dark .lmvp-kicker,.lmvp-band--deep .lmvp-kicker{color:var(--gold);border-color:var(--rule-dark)}
+
+.lmvp-note{
+  font-size:.82rem;line-height:1.5;color:var(--dim);
+  border-left:2px solid var(--gold);padding:.35rem 0 .35rem .85rem;
+}
+.lmvp-band--dark .lmvp-note,.lmvp-band--deep .lmvp-note{color:var(--dim-on-dark)}
+
+.lmvp-quote{
+  font-family:var(--serif);font-size:clamp(1.3rem,2.4vw,2rem);line-height:1.3;
+  border-left:3px solid var(--gold);padding-left:clamp(1rem,2.5vw,2rem);
+}
+
+/* ---------- lists ---------- */
+.lmvp-ticks{list-style:none;padding:0}
+.lmvp-ticks li{position:relative;padding-left:1.5rem;margin-top:.45rem;font-size:.95rem}
+.lmvp-ticks li::before{
+  content:"";position:absolute;left:0;top:.62em;width:.5rem;height:.5rem;
+  border-left:1.5px solid var(--gold);border-bottom:1.5px solid var(--gold);
+  transform:rotate(-45deg) translateY(-2px);
+}
+.lmvp-bars{list-style:none;padding:0;columns:2;column-gap:2.5rem}
+.lmvp-bars li{break-inside:avoid;padding:.4rem 0 .4rem .9rem;border-left:2px solid var(--rule);margin-bottom:.25rem;font-size:.92rem}
+.lmvp-band--dark .lmvp-bars li,.lmvp-band--deep .lmvp-bars li{border-color:var(--rule-dark)}
+@media(max-width:620px){.lmvp-bars{columns:1}}
+
+/* ---------- grids & cards ---------- */
+.lmvp-grid{display:grid;gap:1.25rem}
+.lmvp-g2{grid-template-columns:repeat(auto-fit,minmax(310px,1fr))}
+.lmvp-g3{grid-template-columns:repeat(auto-fit,minmax(255px,1fr))}
+.lmvp-g4{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+
+.lmvp-card{background:#fff;border:1px solid var(--rule);padding:1.5rem 1.4rem;border-radius:2px}
+.lmvp-card h4{margin-bottom:.5rem}
+.lmvp-card p{font-size:.93rem;color:var(--dim)}
+.lmvp-band--dark .lmvp-card,.lmvp-band--deep .lmvp-card{
+  background:rgba(255,255,255,.035);border-color:var(--rule-dark);color:var(--paper)
+}
+.lmvp-band--dark .lmvp-card p,.lmvp-band--deep .lmvp-card p{color:var(--dim-on-dark)}
+.lmvp-card--gold{border-top:3px solid var(--gold)}
+
+/* numbered card — only where content is a true sequence */
+.lmvp-seq{counter-reset:lmvpseq;display:grid;gap:.6rem;list-style:none;padding:0}
+.lmvp-seq li{
+  counter-increment:lmvpseq;display:grid;grid-template-columns:2.4rem 1fr;
+  gap:.9rem;align-items:baseline;padding:.7rem 0;border-bottom:1px solid var(--rule-dark)
+}
+.lmvp-seq li::before{
+  content:counter(lmvpseq,decimal-leading-zero);
+  font-family:var(--mono);font-size:.8rem;color:var(--gold)
+}
+
+/* ---------- diagrams ---------- */
+.lmvp-fig{margin:0}
+.lmvp-fig figcaption{font-size:.8rem;color:var(--dim);margin-top:.9rem}
+.lmvp-band--dark .lmvp-fig figcaption,.lmvp-band--deep .lmvp-fig figcaption{color:var(--dim-on-dark)}
+.lmvp-svg{width:100%;height:auto;display:block;overflow:visible}
+.lmvp-svg text{font-family:var(--sans)}
+.lmvp-tree{
+  font-family:var(--mono);font-size:.8rem;line-height:1.65;white-space:pre;
+  overflow-x:auto;padding:1.4rem;background:var(--green-900);color:#CFE3D8;
+  border-left:3px solid var(--gold);border-radius:2px;
+}
+.lmvp-band--dark .lmvp-tree,.lmvp-band--deep .lmvp-tree{background:rgba(0,0,0,.28)}
+
+/* ---------- tables ---------- */
+.lmvp-tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.lmvp-table{width:100%;border-collapse:collapse;font-size:.9rem;min-width:520px}
+.lmvp-table caption{text-align:left;font-size:.82rem;color:var(--dim);padding-bottom:.8rem}
+.lmvp-table th,.lmvp-table td{padding:.72rem .9rem;text-align:left;border-bottom:1px solid var(--rule)}
+.lmvp-table thead th{
+  font-family:var(--mono);font-weight:500;font-size:.75rem;letter-spacing:.04em;
+  color:var(--green-700);border-bottom:1.5px solid var(--green-700)
+}
+.lmvp-table .num{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums}
+.lmvp-table tfoot td{font-weight:600;border-top:1.5px solid var(--green-700);border-bottom:none}
+.lmvp-table tbody tr:nth-child(even){background:rgba(10,54,39,.035)}
+.lmvp-band--dark .lmvp-table,.lmvp-band--deep .lmvp-table{color:var(--paper)}
+.lmvp-band--dark .lmvp-table th,.lmvp-band--dark .lmvp-table td,
+.lmvp-band--deep .lmvp-table th,.lmvp-band--deep .lmvp-table td{border-color:var(--rule-dark)}
+.lmvp-band--dark .lmvp-table thead th,.lmvp-band--deep .lmvp-table thead th{color:var(--gold);border-bottom-color:var(--gold)}
+.lmvp-band--dark .lmvp-table tbody tr:nth-child(even),
+.lmvp-band--deep .lmvp-table tbody tr:nth-child(even){background:rgba(255,255,255,.035)}
+.lmvp-band--dark .lmvp-table caption,.lmvp-band--deep .lmvp-table caption{color:var(--dim-on-dark)}
+
+.lmvp-tag{font-family:var(--mono);font-size:.72rem;padding:.16rem .5rem;border:1px solid currentColor;border-radius:2px;white-space:nowrap}
+.lmvp-tag--yes{color:var(--green-600)}
+.lmvp-tag--pilot{color:var(--gold)}
+.lmvp-tag--nat{color:var(--green-700)}
+.lmvp-tag--future{color:var(--dim)}
+.lmvp-band--dark .lmvp-tag--yes,.lmvp-band--deep .lmvp-tag--yes{color:var(--green-400)}
+.lmvp-band--dark .lmvp-tag--nat,.lmvp-band--deep .lmvp-tag--nat{color:#BFE0CE}
+.lmvp-band--dark .lmvp-tag--future,.lmvp-band--deep .lmvp-tag--future{color:var(--dim-on-dark)}
+
+/* stacked table on small screens */
+@media(max-width:700px){
+  .lmvp-table--stack{min-width:0}
+  .lmvp-table--stack thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .lmvp-table--stack tr{display:block;padding:.9rem 0;border-bottom:1px solid var(--rule)}
+  .lmvp-band--dark .lmvp-table--stack tr,.lmvp-band--deep .lmvp-table--stack tr{border-color:var(--rule-dark)}
+  .lmvp-table--stack td{display:flex;justify-content:space-between;gap:1rem;border:none;padding:.3rem 0}
+  .lmvp-table--stack td::before{
+    content:attr(data-label);font-family:var(--mono);font-size:.72rem;
+    color:var(--dim);flex:0 0 auto
+  }
+  .lmvp-band--dark .lmvp-table--stack td::before,.lmvp-band--deep .lmvp-table--stack td::before{color:var(--dim-on-dark)}
+  .lmvp-table--stack td:first-child{font-weight:600;padding-bottom:.5rem;justify-content:flex-start}
+  .lmvp-table--stack td:first-child::before{content:""}
+  .lmvp-table--stack tbody tr:nth-child(even){background:none}
+  .lmvp-table--stack tfoot td{border-top:none}
+}
+
+/* ---------- dashboard mockup ---------- */
+.lmvp-dash{background:var(--green-900);border:1px solid var(--rule-dark);border-radius:3px;overflow:hidden}
+.lmvp-dash__bar{
+  display:flex;flex-wrap:wrap;gap:.6rem;justify-content:space-between;align-items:center;
+  padding:.85rem 1.2rem;background:rgba(0,0,0,.3);border-bottom:1px solid var(--rule-dark)
+}
+.lmvp-dash__title{font-family:var(--sans);font-size:.85rem;font-weight:500;color:var(--paper)}
+.lmvp-dash__stamp{font-family:var(--mono);font-size:.68rem;color:var(--gold);border:1px solid var(--gold);padding:.15rem .5rem;border-radius:2px}
+.lmvp-dash__body{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:1px;background:var(--rule-dark)}
+.lmvp-dash__group{background:var(--green-900);padding:1.15rem 1.2rem}
+.lmvp-dash__group h4{font-family:var(--mono);font-size:.72rem;letter-spacing:.05em;color:var(--gold);margin-bottom:.9rem}
+.lmvp-metric{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;padding:.3rem 0}
+.lmvp-metric span{font-size:.85rem;color:var(--dim-on-dark)}
+.lmvp-metric b{font-family:var(--mono);font-size:1.35rem;font-weight:500;color:var(--paper);font-variant-numeric:tabular-nums}
+.lmvp-metric b[data-state="warn"]{color:var(--gold-lit)}
+
+/* ---------- interoperability walkthrough (the showpiece) ---------- */
+.lmvp-flow{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(1.5rem,3vw,3rem);align-items:start}
+@media(max-width:860px){.lmvp-flow{grid-template-columns:1fr}}
+.lmvp-flow__stage{
+  background:rgba(0,0,0,.25);border:1px solid var(--rule-dark);border-radius:3px;padding:1.2rem;
+  position:sticky;top:1rem
+}
+.lmvp-flow__stage .lmvp-svg{max-width:360px;margin:0 auto}
+@media(max-width:860px){.lmvp-flow__stage{position:static}}
+.lmvp-flow__steps{list-style:none;padding:0;counter-reset:lmvpstep}
+.lmvp-flow__steps li{
+  cursor:pointer;counter-increment:lmvpstep;display:grid;grid-template-columns:2rem 1fr;gap:.85rem;
+  padding:.62rem .7rem;border-left:2px solid transparent;opacity:.42;
+  transition:opacity .35s ease,border-color .35s ease,background .35s ease
+}
+.lmvp-flow__steps li::before{content:counter(lmvpstep,decimal-leading-zero);font-family:var(--mono);font-size:.75rem;color:var(--gold);padding-top:.15rem}
+.lmvp-flow__steps li[data-done="true"]{opacity:.72}
+.lmvp-flow__steps li[aria-current="step"]{opacity:1;border-left-color:var(--gold);background:rgba(226,196,99,.09)}
+.lmvp-flow__steps h4{font-size:.98rem;font-family:var(--sans);font-weight:600}
+.lmvp-flow__steps p{font-size:.85rem;color:var(--dim-on-dark);margin-top:.15rem}
+.lmvp-flow__controls{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;margin-top:1.2rem}
+.lmvp-btn{
+  font-family:var(--sans);font-size:.85rem;font-weight:500;cursor:pointer;
+  background:transparent;color:var(--paper);border:1px solid var(--gold);
+  padding:.5rem 1.05rem;border-radius:2px;transition:background .2s ease,color .2s ease
+}
+.lmvp-btn:hover:not(:disabled){background:var(--gold);color:var(--green-900)}
+.lmvp-btn:disabled{opacity:.35;cursor:not-allowed}
+.lmvp-btn--solid{background:var(--gold);color:var(--green-900)}
+.lmvp-btn--solid:hover:not(:disabled){background:var(--gold-lit)}
+.lmvp-progress{font-family:var(--mono);font-size:.78rem;color:var(--dim-on-dark);font-variant-numeric:tabular-nums}
+
+/* flow diagram node states */
+.lmvp-node rect,.lmvp-node circle{transition:fill .35s ease,stroke .35s ease}
+.lmvp-node text{transition:fill .35s ease}
+.lmvp-node--off rect{fill:rgba(255,255,255,.03);stroke:rgba(226,214,183,.25)}
+.lmvp-node--off text{fill:#7C9287}
+.lmvp-node--on rect{fill:rgba(194,153,47,.16);stroke:var(--gold)}
+.lmvp-node--on text{fill:#F7F3E9}
+.lmvp-link{stroke:rgba(226,214,183,.25);stroke-width:1.5;fill:none;transition:stroke .35s ease,stroke-width .35s ease}
+.lmvp-link--on{stroke:var(--gold);stroke-width:2.2}
+.lmvp-linklabel{font-family:var(--mono);font-size:10px;fill:#7C9287;transition:fill .35s ease}
+.lmvp-linklabel--on{fill:var(--gold-lit)}
+
+/* ---------- misc ---------- */
+.lmvp-split{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:0;border:1px solid var(--rule)}
+.lmvp-split>div{padding:clamp(1.5rem,3vw,2.4rem)}
+.lmvp-split>div+div{border-left:1px solid var(--rule)}
+@media(max-width:620px){.lmvp-split>div+div{border-left:none;border-top:1px solid var(--rule)}}
+.lmvp-band--dark .lmvp-split,.lmvp-band--deep .lmvp-split{border-color:var(--rule-dark)}
+.lmvp-band--dark .lmvp-split>div+div,.lmvp-band--deep .lmvp-split>div+div{border-left-color:var(--rule-dark)}
+@media(max-width:620px){
+  .lmvp-band--dark .lmvp-split>div+div,.lmvp-band--deep .lmvp-split>div+div{border-top-color:var(--rule-dark)}
+}
+.lmvp-split--gov{background:linear-gradient(180deg,rgba(194,153,47,.07),transparent)}
+
+.lmvp-scorecard{list-style:none;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:.1rem}
+.lmvp-scorecard li{display:flex;justify-content:space-between;gap:1rem;padding:.6rem .8rem;border-bottom:1px solid var(--rule-dark);font-size:.9rem}
+.lmvp-scorecard b{color:var(--green-400);font-family:var(--mono)}
+
+.lmvp-timeline{list-style:none;padding:0;border-left:1px solid var(--rule)}
+.lmvp-timeline li{position:relative;padding:0 0 2rem 1.75rem}
+.lmvp-timeline li:last-child{padding-bottom:0}
+.lmvp-timeline li::before{
+  content:"";position:absolute;left:-4.5px;top:.55rem;width:8px;height:8px;
+  background:var(--gold);border-radius:50%
+}
+.lmvp-timeline__weeks{font-family:var(--mono);font-size:.76rem;color:var(--green-600);display:block;margin-bottom:.2rem}
+
+.lmvp-path{list-style:none;padding:0;display:grid;gap:.45rem;counter-reset:lmvppath}
+.lmvp-path li{
+  counter-increment:lmvppath;display:grid;grid-template-columns:3.1rem 1fr;gap:1rem;align-items:center;
+  padding:.72rem 1rem;background:rgba(255,255,255,.04);border-left:2px solid var(--rule-dark)
+}
+.lmvp-path li::before{content:"STEP " counter(lmvppath);font-family:var(--mono);font-size:.66rem;color:var(--gold);line-height:1.25}
+.lmvp-path li[data-here="true"]{border-left-color:var(--gold);background:rgba(194,153,47,.12)}
+.lmvp-path__here{font-family:var(--mono);font-size:.68rem;color:var(--gold);margin-left:.6rem}
+
+.lmvp-costrange{display:flex;flex-wrap:wrap;gap:2.5rem;padding:1.5rem 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.lmvp-costrange div{min-width:150px}
+.lmvp-costrange span{display:block;font-size:.78rem;color:var(--dim);margin-bottom:.25rem}
+.lmvp-costrange b{font-family:var(--mono);font-size:1.5rem;font-weight:500;color:var(--green-700)}
+
+.lmvp a{color:inherit}
+.lmvp :focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+
+
+/* ---------- hero proof chain ---------- */
+.lmvp-chain{border-top:1px solid var(--rule-dark);border-bottom:1px solid var(--rule-dark);padding:1.6rem 0}
+.lmvp-chain__row{display:flex;flex-wrap:wrap;align-items:center;gap:.55rem}
+.lmvp-chain__node{
+  font-family:var(--sans);font-size:clamp(.85rem,1.4vw,1.05rem);font-weight:500;
+  padding:.6rem 1.05rem;border:1px solid var(--gold);color:var(--paper);border-radius:2px;
+  background:rgba(194,153,47,.1);white-space:nowrap
+}
+.lmvp-chain__node--end{background:var(--gold);color:var(--green-900)}
+.lmvp-chain__edge{
+  font-family:var(--mono);font-size:.72rem;color:var(--gold-lit);
+  position:relative;padding:0 1.5rem;white-space:nowrap
+}
+.lmvp-chain__edge::before{
+  content:"";position:absolute;left:0;right:0;top:calc(50% + .75em);height:1px;background:rgba(226,196,99,.45)
+}
+.lmvp-chain__base{
+  margin-top:1.1rem;padding-top:.9rem;border-top:1px dashed rgba(226,214,183,.3);
+  font-size:.85rem;color:var(--dim-on-dark)
+}
+@media(max-width:560px){
+  .lmvp-chain__row{flex-direction:column;align-items:stretch;gap:.2rem}
+  .lmvp-chain__node{text-align:center}
+  .lmvp-chain__edge{padding:.35rem 0;text-align:center}
+  .lmvp-chain__edge::before{display:none}
+}
+
+/* policy -> pilot -> proof -> scale */
+.lmvp-seqbar{display:flex;flex-wrap:wrap;gap:.4rem}
+.lmvp-seqbar span{
+  flex:1 1 150px;font-family:var(--mono);font-size:.78rem;letter-spacing:.04em;
+  padding:.7rem .9rem;border-top:2px solid var(--gold);color:var(--paper);
+  background:rgba(255,255,255,.04)
+}
+.lmvp-seqbar span:last-child{background:rgba(194,153,47,.16)}
+
+/* ---------- small headings ---------- */
+.lmvp h5.lmvp-minihead{
+  font-family:var(--mono);font-size:.74rem;font-weight:500;letter-spacing:.05em;
+  color:var(--green-600);margin:0 0 .5rem
+}
+.lmvp-band--dark h5.lmvp-minihead,.lmvp-band--deep h5.lmvp-minihead{color:var(--gold)}
+
+.lmvp-figure{
+  font-family:var(--mono);font-size:2.1rem;font-weight:500;color:var(--green-700);
+  display:block;line-height:1;margin-bottom:.5rem
+}
+.lmvp-band--dark .lmvp-figure,.lmvp-band--deep .lmvp-figure{color:var(--gold-lit)}
+
+/* ---------- svg diagram styling ---------- */
+.lmvp-scrollx{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:.4rem}
+.lmvp-svg-band{font-family:var(--mono);font-size:11px;fill:var(--dim-on-dark);letter-spacing:.04em}
+.lmvp-svg-band--alt{fill:#8FA79A}
+.lmvp-svg-boxes rect{fill:rgba(255,255,255,.05);stroke:rgba(226,214,183,.35);stroke-width:1.2}
+.lmvp-svg-boxes rect.lmvp-svg-box--key{fill:rgba(194,153,47,.15);stroke:var(--gold);stroke-width:1.5}
+.lmvp-svg-boxes text{font-size:12px;fill:var(--paper);font-weight:500}
+.lmvp-svg-links path{fill:none;stroke:rgba(194,153,47,.55);stroke-width:1.3}
+.lmvp-svg-edgelabels text{font-family:var(--mono);font-size:10px;fill:var(--gold-lit)}
+
+/* ---------- deferred list ---------- */
+.lmvp-defer{list-style:none;padding:0;margin-top:1.2rem;columns:2;column-gap:2rem}
+.lmvp-defer li{
+  break-inside:avoid;position:relative;padding:.32rem 0 .32rem 1.5rem;
+  font-size:.9rem;color:var(--dim)
+}
+.lmvp-defer li::before{
+  content:"";position:absolute;left:0;top:.95em;width:.75rem;height:1px;background:var(--rule)
+}
+@media(max-width:720px){.lmvp-defer{columns:1}}
+
+/* ---------- certification states ---------- */
+.lmvp-states{display:flex;flex-wrap:wrap;gap:.5rem;margin:.4rem 0 1rem}
+.lmvp-state{
+  font-family:var(--mono);font-size:.78rem;letter-spacing:.03em;
+  padding:.35rem .85rem;border:1px solid currentColor;border-radius:2px;display:inline-block
+}
+.lmvp-state--pass{color:var(--green-600)}
+.lmvp-state--fail{color:#B3562F}
+.lmvp-state--cond{color:var(--gold)}
+.lmvp-state--pend{color:var(--dim)}
+.lmvp-band--dark .lmvp-state--pass,.lmvp-band--deep .lmvp-state--pass{color:var(--green-400)}
+.lmvp-band--dark .lmvp-state--fail,.lmvp-band--deep .lmvp-state--fail{color:#E08A5F}
+.lmvp-band--dark .lmvp-state--pend,.lmvp-band--deep .lmvp-state--pend{color:var(--dim-on-dark)}
+.lmvp-card h4.lmvp-state{font-family:var(--mono);font-size:.78rem;margin-bottom:.7rem}
+
+/* ---------- roadmap ladder ---------- */
+.lmvp-ladder{list-style:none;padding:0;display:grid;gap:.4rem;max-width:560px}
+.lmvp-ladder li{
+  display:flex;flex-wrap:wrap;align-items:baseline;gap:.75rem;
+  padding:.85rem 1.1rem;background:#fff;border:1px solid var(--rule);border-left-width:3px;
+  border-left-color:var(--rule);position:relative
+}
+.lmvp-ladder li+li::before{
+  content:"";position:absolute;left:1.55rem;top:-.4rem;height:.4rem;width:1px;background:var(--rule)
+}
+.lmvp-ladder li span{font-weight:500}
+.lmvp-ladder li em{font-family:var(--mono);font-size:.68rem;font-style:normal;color:var(--gold)}
+.lmvp-ladder li[data-here="true"]{border-left-color:var(--gold);background:linear-gradient(90deg,rgba(194,153,47,.1),#fff 60%)}
+
+/* ---------- final recommendation steps ---------- */
+.lmvp-steps-final{counter-reset:lmvpfin;list-style:none;padding:0;display:grid;gap:.35rem}
+.lmvp-steps-final li{
+  counter-increment:lmvpfin;font-family:var(--serif);
+  font-size:clamp(1.15rem,2vw,1.6rem);line-height:1.3;
+  padding:.75rem 0 .75rem 3.2rem;border-bottom:1px solid var(--rule);position:relative
+}
+.lmvp-steps-final li::before{
+  content:counter(lmvpfin);position:absolute;left:0;top:1.15rem;
+  font-family:var(--mono);font-size:.78rem;color:var(--gold)
+}
+.lmvp-steps-final li:last-child{border-bottom:none;color:var(--green-700)}
+
+@media (prefers-reduced-motion:reduce){
+  .lmvp *,.lmvp *::before,.lmvp *::after{
+    animation-duration:.001ms !important;animation-iteration-count:1 !important;
+    transition-duration:.001ms !important;scroll-behavior:auto !important
+  }
+}
+</style>
+</head>
+<body style="margin:0">
+<!-- ================================================================
+     LEAN MVP / NATIONAL INTEROPERABILITY PILOT
+
+     TO MERGE INTO index.html — three steps, nothing else changes:
+
+     1. Copy the <style> block from the <head> of this file into the
+        <head> of index.html. Every rule is namespaced under .lmvp,
+        so it cannot affect any existing section.
+
+     2. Copy this entire <section id="lean-mvp"> ... </section> and
+        paste it after the National E-Mobility Platform section and
+        before Implementation, so the reader moves:
+        Framework -> National Platform -> Lean MVP -> Implementation
+        -> National Roadmap.
+
+     3. Copy the <script> block at the end of this file to just before
+        </body> in index.html, and add the nav item:
+           <a href="#lean-mvp">Lean MVP</a>
+
+     The --serif / --sans / --mono variables at the top of the style
+     block are the only place typography is set. Point them at the
+     typefaces already used in index.html to match the parent document
+     exactly, and drop the Google Fonts <link> if they are already loaded.
+     ================================================================ -->
+<section id="lean-mvp" class="lmvp" aria-labelledby="lmvp-title">
+
+<!-- 1. CORE MESSAGE ------------------------------------------------>
+<div class="lmvp-band lmvp-band--deep">
+  <div class="lmvp-inner lmvp-stack-lg">
+    <div class="lmvp-narrow lmvp-stack">
+      <span class="lmvp-kicker">Part of the National EV Charging Interoperability Framework</span>
+      <h2 id="lmvp-title">Lean MVP&nbsp;/ National Interoperability Pilot</h2>
+      <p class="lmvp-lead">Start with a controlled national pilot. Prove interoperability before scaling nationally.</p>
+      <p>Nigeria does not need to build the complete national e-mobility infrastructure on day one. Government can instead establish a controlled interoperability environment involving a small number of charging operators, mobility service providers, charger manufacturers, charging stations, payment providers, technology providers and relevant public agencies.</p>
+      <p>Within that environment, the pilot demonstrates a single proposition: that independently operated charging infrastructure and digital platforms can communicate using common standards, under a national registry and monitoring layer.</p>
+    </div>
+
+    <figure class="lmvp-fig">
+      <div class="lmvp-chain" role="img" aria-label="Proof chain: charger to OCPP to CPO to OCPI to eMSP to customer, with a national registry and monitoring layer beneath.">
+        <div class="lmvp-chain__row">
+          <span class="lmvp-chain__node">Charger</span>
+          <span class="lmvp-chain__edge">OCPP</span>
+          <span class="lmvp-chain__node">CPO</span>
+          <span class="lmvp-chain__edge">OCPI</span>
+          <span class="lmvp-chain__node">eMSP</span>
+          <span class="lmvp-chain__edge">App</span>
+          <span class="lmvp-chain__node lmvp-chain__node--end">Customer</span>
+        </div>
+        <div class="lmvp-chain__base">National registry &amp; monitoring layer</div>
+      </div>
+      <figcaption>The fundamental proof the pilot must deliver, end to end.</figcaption>
+    </figure>
+
+    <div class="lmvp-narrow">
+      <p class="lmvp-note">The Lean MVP is the first executable step toward the full National Electric Vehicle Charging Interoperability Framework. It does not replace the national framework, the National E-Mobility Platform or the five-year roadmap set out in the preceding sections. It accelerates them.</p>
+    </div>
+
+    <div class="lmvp-seqbar" aria-label="Sequence: policy, pilot, proof, national scale">
+      <span>Policy</span><span>Pilot</span><span>Proof</span><span>National scale</span>
+    </div>
+  </div>
+</div>
+
+<!-- 2. WHY LEAN ---------------------------------------------------->
+<div class="lmvp-band">
+  <div class="lmvp-inner lmvp-stack-lg">
+    <div class="lmvp-narrow lmvp-stack">
+      <h3>Why a controlled pilot comes before national deployment</h3>
+      <p>The full national programme set out in this proposal spans eighteen interdependent workstreams. Each is necessary. Building all of them at once is not.</p>
+    </div>
+
+    <ul class="lmvp-bars">
+      <li>Policy</li><li>Governance</li><li>Standards</li><li>Certification</li>
+      <li>Registry</li><li>Cybersecurity</li><li>Data infrastructure</li><li>Interoperability</li>
+      <li>Roaming</li><li>Compliance</li><li>Reliability monitoring</li><li>Grid integration</li>
+      <li>Consumer protection</li><li>National reporting</li><li>ISO 15118 and Plug &amp; Charge</li>
+      <li>Smart charging</li><li>Regional interoperability</li><li>Enforcement</li>
+    </ul>
+
+    <div class="lmvp-narrow lmvp-stack">
+      <p>Delivering these simultaneously would commit public funds and institutional capacity to a design that has not yet been tested against real operators and real hardware. It introduces avoidable cost, complexity and implementation risk, and it defers the moment at which government learns whether the technical model works.</p>
+      <p>The Lean MVP therefore narrows the first phase to one question.</p>
+      <blockquote class="lmvp-quote">Can independently operated charging networks in Nigeria communicate through common standards, and give government a trusted view of charging infrastructure and interoperability?</blockquote>
+      <p>Everything the pilot builds exists to answer that question. Everything else is deferred, not abandoned.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 3. OBJECTIVE --------------------------------------------------->
+<div class="lmvp-band lmvp-band--dark">
+  <div class="lmvp-inner lmvp-stack-lg">
+    <div class="lmvp-narrow lmvp-stack">
+      <span class="lmvp-kicker">Pilot objective</span>
+      <h3>Prove interoperability end to end</h3>
+      <p class="lmvp-dim">Eleven conditions define the technical demonstration. The pilot succeeds when all eleven can be observed in sequence, across systems operated by different organisations.</p>
+    </div>
+    <ol class="lmvp-seq">
+      <li>A charger connects to a CPO platform.</li>
+      <li>The charger communicates using OCPP.</li>
+      <li>The CPO exposes charging information through OCPI.</li>
+      <li>An eMSP discovers the charging location.</li>
+      <li>The eMSP initiates an authorised charging workflow.</li>
+      <li>Charging session information is exchanged between systems.</li>
+      <li>A Charge Detail Record is generated.</li>
+      <li>Payment and reconciliation information can be represented.</li>
+      <li>Charger availability and faults are visible.</li>
+      <li>The national platform receives standardised monitoring data.</li>
+      <li>The system can identify whether participating infrastructure meets the defined interoperability requirements.</li>
+    </ol>
+  </div>
+</div>
+
+<!-- 4. WHAT THE MVP BUILDS ----------------------------------------->
+<div class="lmvp-band lmvp-band--tint">
+  <div class="lmvp-inner lmvp-stack-lg">
+    <div class="lmvp-narrow lmvp-stack">
+      <h3>The Minimum Viable National Platform</h3>
+      <p>Four components, and nothing beyond what the proof requires. Each is designed so it can later grow into its full national equivalent rather than being discarded.</p>
+    </div>
+
+    <div class="lmvp-grid lmvp-g2">
+      <div class="lmvp-card lmvp-card--gold">
+        <h4>A. National registration portal</h4>
+        <p>A single point at which participating organisations register with the programme: charge point operators, eMSPs, charger manufacturers, charging stations and technology providers.</p>
+        <ul class="lmvp-ticks">
+          <li>Organisation identity</li>
+          <li>Contact information</li>
+          <li>Technical capabilities</li>
+          <li>Network information</li>
+          <li>Certification status</li>
+          <li>Participating systems</li>
+        </ul>
+      </div>
+
+      <div class="lmvp-card lmvp-card--gold">
+        <h4>B. National charging registry — MVP</h4>
+        <p>A lightweight registry holding only the records needed to identify and monitor pilot infrastructure. It is not yet the complete national dataset.</p>
+        <ul class="lmvp-ticks">
+          <li>Charging station and location</li>
+          <li>Operator</li>
+          <li>Charger, EVSE and connector</li>
+          <li>Power rating</li>
+          <li>Charger status</li>
+          <li>Certification status</li>
+          <li>OCPP capability</li>
+          <li>Network and operator information</li>
+        </ul>
+      </div>
+
+      <div class="lmvp-card lmvp-card--gold">
+        <h4>C. Interoperability gateway</h4>
+        <p>The central technical demonstration layer. Charger data reaches CPO platforms over OCPP; CPO platforms exchange locations, tariffs, sessions and CDRs with eMSPs over OCPI, through a controlled national gateway.</p>
+        <pre class="lmvp-tree" aria-label="Gateway architecture: charger connects over OCPP to a CPO platform, which connects over OCPI to the interoperability gateway, which serves eMSP A and eMSP B.">CHARGER
+   │
+ OCPP
+   │
+   ▼
+CPO PLATFORM
+   │
+ OCPI
+   │
+   ▼
+INTEROPERABILITY GATEWAY
+   │
+   ├───────────────┐
+   ▼               ▼
+eMSP A           eMSP B</pre>
+      </div>
+
+      <div class="lmvp-card lmvp-card--gold">
+        <h4>D. National monitoring dashboard</h4>
+        <p>A government view of the pilot estate across four dimensions, built from standardised data rather than operator-supplied reports.</p>
+        <div class="lmvp-grid lmvp-g2" style="gap:.9rem;margin-top:1rem">
+          <div>
+            <h5 class="lmvp-minihead">Infrastructure</h5>
+            <ul class="lmvp-ticks"><li>Registered chargers</li><li>Registered stations</li><li>Participating CPOs</li><li>Participating eMSPs</li></ul>
+          </div>
+          <div>
+            <h5 class="lmvp-minihead">Operations</h5>
+            <ul class="lmvp-ticks"><li>Online, offline and faulted chargers</li><li>Available chargers</li><li>Sessions</li></ul>
+          </div>
+          <div>
+            <h5 class="lmvp-minihead">Interoperability</h5>
+            <ul class="lmvp-ticks"><li>Connected CPOs and eMSPs</li><li>Successful API transactions</li><li>Failed transactions</li><li>Interoperability test results</li></ul>
+          </div>
+          <div>
+            <h5 class="lmvp-minihead">Compliance</h5>
+            <ul class="lmvp-ticks"><li>Registered</li><li>Certified</li><li>Pending certification</li><li>Non-compliant</li></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 5. ARCHITECTURE ------------------------------------------------>
+<div class="lmvp-band lmvp-band--deep">
+  <div class="lmvp-inner lmvp-stack-lg">
+    <div class="lmvp-narrow lmvp-stack">
+      <span class="lmvp-kicker">Pilot architecture</span>
+      <h3>How the pilot platform is arranged</h3>
+      <p class="lmvp-dim">Government sits above the market, not inside it. The national layer registers, verifies and monitors. Commercial participants retain their own platforms, customers and commercial relationships.</p>
+    </div>
+
+    <figure class="lmvp-fig">
+      <div class="lmvp-scrollx">
+        <svg class="lmvp-svg" viewBox="0 0 880 660" role="img" aria-labelledby="lmvp-archt lmvp-archd" style="min-width:660px">
+          <title id="lmvp-archt">Lean MVP platform architecture</title>
+          <desc id="lmvp-archd">National government oversees the national interoperability MVP platform, which contains the registry, monitoring dashboard and certification records. The registry feeds the interoperability gateway, which connects over OCPI to CPO A and CPO B, each connected over OCPP to a charger, and outward to participating eMSPs.</desc>
+          <defs>
+            <marker id="lmvpArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M0 0 L10 5 L0 10 z" fill="#C2992F"></path>
+            </marker>
+          </defs>
+
+          <!-- government band -->
+          <rect x="20" y="16" width="840" height="430" rx="3" fill="rgba(194,153,47,.05)" stroke="rgba(194,153,47,.35)" stroke-dasharray="4 4"></rect>
+          <text x="36" y="40" class="lmvp-svg-band">GOVERNMENT LAYER — coordinates and verifies</text>
+
+          <!-- commercial band -->
+          <rect x="20" y="462" width="840" height="188" rx="3" fill="rgba(255,255,255,.03)" stroke="rgba(226,214,183,.2)" stroke-dasharray="4 4"></rect>
+          <text x="36" y="484" class="lmvp-svg-band lmvp-svg-band--alt">COMMERCIAL ECOSYSTEM — builds and operates the market</text>
+
+          <g class="lmvp-svg-boxes">
+            <rect x="330" y="54" width="220" height="44" rx="2"></rect>
+            <text x="440" y="81" text-anchor="middle">NATIONAL GOVERNMENT</text>
+
+            <rect x="300" y="128" width="280" height="52" rx="2" class="lmvp-svg-box--key"></rect>
+            <text x="440" y="150" text-anchor="middle">NATIONAL INTEROPERABILITY</text>
+            <text x="440" y="168" text-anchor="middle">MVP PLATFORM</text>
+
+            <rect x="90" y="214" width="170" height="44" rx="2"></rect>
+            <text x="175" y="241" text-anchor="middle">REGISTRY</text>
+
+            <rect x="355" y="214" width="170" height="44" rx="2"></rect>
+            <text x="440" y="235" text-anchor="middle">MONITORING</text>
+            <text x="440" y="251" text-anchor="middle">DASHBOARD</text>
+
+            <rect x="620" y="214" width="170" height="44" rx="2"></rect>
+            <text x="705" y="235" text-anchor="middle">CERTIFICATION</text>
+            <text x="705" y="251" text-anchor="middle">RECORDS</text>
+
+            <rect x="285" y="392" width="310" height="46" rx="2" class="lmvp-svg-box--key"></rect>
+            <text x="440" y="420" text-anchor="middle">INTEROPERABILITY GATEWAY</text>
+
+            <rect x="150" y="500" width="150" height="42" rx="2"></rect>
+            <text x="225" y="526" text-anchor="middle">CPO A</text>
+            <rect x="420" y="500" width="150" height="42" rx="2"></rect>
+            <text x="495" y="526" text-anchor="middle">CPO B</text>
+            <rect x="660" y="500" width="150" height="42" rx="2"></rect>
+            <text x="735" y="526" text-anchor="middle">eMSPs</text>
+
+            <rect x="150" y="586" width="150" height="42" rx="2"></rect>
+            <text x="225" y="612" text-anchor="middle">CHARGER A</text>
+            <rect x="420" y="586" width="150" height="42" rx="2"></rect>
+            <text x="495" y="612" text-anchor="middle">CHARGER B</text>
+          </g>
+
+          <g class="lmvp-svg-links" marker-end="url(#lmvpArrow)">
+            <path d="M440 98 V124"></path>
+            <path d="M440 180 V196 H175 V210"></path>
+            <path d="M440 180 V210"></path>
+            <path d="M440 180 V196 H705 V210"></path>
+            <path d="M175 258 V330 H440 V388"></path>
+            <path d="M360 438 V476 H225 V496"></path>
+            <path d="M520 438 V476 H495 V496"></path>
+            <path d="M580 415 H735 V496"></path>
+            <path d="M225 542 V582"></path>
+            <path d="M495 542 V582"></path>
+          </g>
+
+          <g class="lmvp-svg-edgelabels">
+            <text x="300" y="470">OCPI</text>
+            <text x="540" y="470">OCPI</text>
+            <text x="240" y="570">OCPP</text>
+            <text x="510" y="570">OCPP</text>
+          </g>
+        </svg>
+      </div>
+      <figcaption>Pilot architecture. The diagram scrolls horizontally on narrow screens.</figcaption>
+    </figure>
+
+    <div class="lmvp-split">
+      <div>
+        <h4>Commercial ecosystem</h4>
+        <ul class="lmvp-ticks">
+          <li>Chargers</li><li>Charge point operators</li><li>eMSPs</li>
+          <li>Payment providers</li><li>Vehicle manufacturers</li><li>Energy companies</li>
+        </ul>
+      </div>
+      <div class="lmvp-split--gov">
+        <h4>Government layer</h4>
+        <ul class="lmvp-ticks">
+          <li>Registry</li><li>Standards</li><li>Certification</li>
+          <li>Monitoring</li><li>Compliance</li><li>National reporting</li>
+        </ul>
+      </div>
+    </div>
+
+    <blockquote class="lmvp-quote">Government coordinates and verifies. The private sector builds and operates the market.</blockquote>
+  </div>
+</div>
+
+<!-- 6. INTEROPERABILITY TEST (showpiece) --------------------------->
+<div class="lmvp-band lmvp-band--dark">
+  <div class="lmvp-inner lmvp-stack-lg">
+    <div class="lmvp-narrow lmvp-stack">
+      <span class="lmvp-kicker">The test that decides the pilot</span>
+      <h3>One charging session, across two independent companies</h3>
+      <p class="lmvp-dim">CPO&nbsp;A owns the charger. eMSP&nbsp;B has the customer. Neither has a commercial integration with the other. If the session completes and settles correctly, the interoperability model works.</p>
+    </div>
+
+    <div class="lmvp-flow">
+      <div class="lmvp-flow__stage">
+        <svg class="lmvp-svg" viewBox="0 0 400 500" role="img" aria-labelledby="lmvp-flowt lmvp-flowd">
+          <title id="lmvp-flowt">Interoperability test signal path</title>
+          <desc id="lmvp-flowd">Charger A connects over OCPP to CPO A, which connects over OCPI to the interoperability gateway, which connects over OCPI to eMSP B and then to the driver. The gateway also sends authorised monitoring data to the national MVP platform.</desc>
+          <defs>
+            <marker id="lmvpArrow2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M0 0 L10 5 L0 10 z" fill="currentColor"></path>
+            </marker>
+          </defs>
+
+          <g class="lmvp-link" data-link="ocpp" marker-end="url(#lmvpArrow2)"><path d="M110 66 V104"></path></g>
+          <g class="lmvp-link" data-link="ocpi1" marker-end="url(#lmvpArrow2)"><path d="M110 156 V194"></path></g>
+          <g class="lmvp-link" data-link="ocpi2" marker-end="url(#lmvpArrow2)"><path d="M110 246 V284"></path></g>
+          <g class="lmvp-link" data-link="app" marker-end="url(#lmvpArrow2)"><path d="M110 336 V374"></path></g>
+          <g class="lmvp-link" data-link="mon" marker-end="url(#lmvpArrow2)"><path d="M196 220 H262"></path></g>
+
+          <text class="lmvp-linklabel" data-link="ocpp" x="120" y="90">OCPP</text>
+          <text class="lmvp-linklabel" data-link="ocpi1" x="120" y="180">OCPI</text>
+          <text class="lmvp-linklabel" data-link="ocpi2" x="120" y="270">OCPI</text>
+          <text class="lmvp-linklabel" data-link="app" x="120" y="360">app / auth</text>
+          <text class="lmvp-linklabel" data-link="mon" x="204" y="212">monitoring</text>
+
+          <g class="lmvp-node lmvp-node--off" data-node="charger">
+            <rect x="24" y="22" width="172" height="44" rx="2" stroke-width="1.2"></rect>
+            <text x="110" y="49" text-anchor="middle" font-size="12.5">Charger A</text>
+          </g>
+          <g class="lmvp-node lmvp-node--off" data-node="cpo">
+            <rect x="24" y="112" width="172" height="44" rx="2" stroke-width="1.2"></rect>
+            <text x="110" y="139" text-anchor="middle" font-size="12.5">CPO A</text>
+          </g>
+          <g class="lmvp-node lmvp-node--off" data-node="gateway">
+            <rect x="24" y="202" width="172" height="44" rx="2" stroke-width="1.2"></rect>
+            <text x="110" y="223" text-anchor="middle" font-size="11">Interoperability</text>
+            <text x="110" y="238" text-anchor="middle" font-size="11">gateway</text>
+          </g>
+          <g class="lmvp-node lmvp-node--off" data-node="emsp">
+            <rect x="24" y="292" width="172" height="44" rx="2" stroke-width="1.2"></rect>
+            <text x="110" y="319" text-anchor="middle" font-size="12.5">eMSP B</text>
+          </g>
+          <g class="lmvp-node lmvp-node--off" data-node="driver">
+            <rect x="24" y="382" width="172" height="44" rx="2" stroke-width="1.2"></rect>
+            <text x="110" y="409" text-anchor="middle" font-size="12.5">Driver</text>
+          </g>
+          <g class="lmvp-node lmvp-node--off" data-node="national">
+            <rect x="262" y="198" width="120" height="52" rx="2" stroke-width="1.2"></rect>
+            <text x="322" y="219" text-anchor="middle" font-size="11">National MVP</text>
+            <text x="322" y="234" text-anchor="middle" font-size="11">platform</text>
+          </g>
+        </svg>
+
+        <div class="lmvp-flow__controls">
+          <button type="button" class="lmvp-btn" data-flow="prev">Previous</button>
+          <button type="button" class="lmvp-btn lmvp-btn--solid" data-flow="next">Next step</button>
+          <button type="button" class="lmvp-btn" data-flow="reset">Restart</button>
+          <span class="lmvp-progress" data-flow="progress" aria-live="polite">Step 1 of 11</span>
+        </div>
+      </div>
+
+      <ol class="lmvp-flow__steps" data-flow="list">
+        <li data-nodes="charger,cpo" data-links="ocpp">
+          <div><h4>Charger connects</h4><p>Charger A comes online and registers with CPO A's platform using OCPP.</p></div>
+        </li>
+        <li data-nodes="charger,cpo" data-links="ocpp">
+          <div><h4>Status and metering flow</h4><p>Availability, connector state and meter values are reported continuously over the OCPP link.</p></div>
+        </li>
+        <li data-nodes="cpo,gateway" data-links="ocpi1">
+          <div><h4>CPO publishes over OCPI</h4><p>CPO A exposes locations, EVSEs, connectors and tariffs through the interoperability gateway.</p></div>
+        </li>
+        <li data-nodes="gateway,emsp" data-links="ocpi2">
+          <div><h4>eMSP discovers the charger</h4><p>eMSP B, operating an entirely separate platform, retrieves Charger A's location and tariff. No bilateral integration was built.</p></div>
+        </li>
+        <li data-nodes="emsp,driver" data-links="app">
+          <div><h4>Driver selects the charger</h4><p>A customer of eMSP B sees a charger belonging to CPO A in their own application.</p></div>
+        </li>
+        <li data-nodes="driver,emsp,gateway,cpo,charger" data-links="app,ocpi2,ocpi1,ocpp">
+          <div><h4>Authorised start</h4><p>The start request is authorised by eMSP B, carried over OCPI and executed by CPO A on the charger.</p></div>
+        </li>
+        <li data-nodes="charger,cpo,gateway,emsp" data-links="ocpp,ocpi1,ocpi2">
+          <div><h4>Session created and exchanged</h4><p>Session data updates in both operators' systems while the vehicle charges.</p></div>
+        </li>
+        <li data-nodes="cpo,gateway,emsp" data-links="ocpi1,ocpi2">
+          <div><h4>CDR generated</h4><p>The session ends and CPO A issues a Charge Detail Record to eMSP B in a standard format.</p></div>
+        </li>
+        <li data-nodes="emsp,gateway,cpo" data-links="ocpi2,ocpi1">
+          <div><h4>Payment and reconciliation recorded</h4><p>Settlement data between the two operators is represented and reconciled. Commercial terms remain a matter for the parties.</p></div>
+        </li>
+        <li data-nodes="gateway,national" data-links="mon">
+          <div><h4>National platform receives monitoring data</h4><p>Authorised, standardised infrastructure and status data reaches the government layer. Customer identity does not.</p></div>
+        </li>
+        <li data-nodes="national,gateway,cpo,emsp,charger" data-links="mon,ocpi1,ocpi2,ocpp">
+          <div><h4>Dashboard reflects the estate</h4><p>Charger, location, operator, status, session and compliance state are visible to government in one place.</p></div>
+        </li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<!-- 7. PARTICIPANTS ------------------------------------------------>
+<div class="lmvp-band">
+  <div class="lmvp-inner lmvp-stack-lg">
+    <div class="lmvp-narrow lmvp-stack">
+      <h3>A small number of participants is enough to prove the model</h3>
+      <p>Interoperability is proved by heterogeneity, not by volume. Two operators who have never integrated with each other demonstrate more than twenty who share a vendor. Government does not need to onboard the industry to begin.</p>
+    </div>
+
+    <div class="lmvp-grid lmvp-g3">
+      <div class="lmvp-card"><b class="lmvp-figure">2–3</b><p>Charge point operators</p></div>
+      <div class="lmvp-card"><b class="lmvp-figure">2</b><p>eMSPs</p></div>
+      <div class="lmvp-card"><b class="lmvp-figure">2–3</b><p>Charger manufacturers</p></div>
+      <div class="lmvp-card"><b class="lmvp-figure">5–10</b><p>Charging locations</p></div>
+      <div class="lmvp-card"><b class="lmvp-figure">1–2</b><p>Payment providers</p></div>
+      <div class="lmvp-card"><h4>Public bodies</h4><p>Relevant government, standards and regulatory participants, in a number set by the pilot governance structure.</p></div>
+    </div>
+
+    <p class="lmvp-note"><b>Illustrative pilot configuration.</b> These are proposed pilot design parameters, not existing commitments. No organisation has been approached, selected or committed. Final participation should be determined through government and industry consultation, under an open and transparent process.</p>
+  </div>
+</div>
+
+<!-- 8 & 9. SCOPE --------------------------------------------------->
+<div class="lmvp-band lmvp-band--tint">
+  <div class="lmvp-inner lmvp-stack-lg">
+    <div class="lmvp-narrow lmvp-stack">
+      <h3>What the pilot includes, and what it defers</h3>
+      <p>Scope discipline is the reason the pilot can be delivered in months. The right-hand column is not a list of exclusions from the national vision. It is a list of things that should be designed once the foundation has been demonstrated.</p>
+    </div>
+
+    <div class="lmvp-split">
+      <div>
+        <h4>Included in the pilot</h4>
+        <div class="lmvp-stack" style="margin-top:1.2rem">
+          <div>
+            <h5 class="lmvp-minihead">Policy and governance</h5>
+            <ul class="lmvp-ticks">
+              <li>Pilot governance structure</li><li>Participant onboarding</li>
+              <li>Technical participation rules</li><li>Test procedures</li>
+              <li>Certification test criteria</li>
+            </ul>
+          </div>
+          <div>
+            <h5 class="lmvp-minihead">Technology</h5>
+            <ul class="lmvp-ticks">
+              <li>National registration portal</li><li>Lightweight charging registry</li>
+              <li>Interoperability gateway</li><li>OCPP connectivity demonstration</li>
+              <li>OCPI connectivity demonstration</li><li>API authentication</li>
+              <li>Monitoring dashboard</li><li>Test environment</li>
+              <li>Audit logging</li><li>Basic reporting</li>
+            </ul>
+          </div>
+          <div>
+            <h5 class="lmvp-minihead">Testing</h5>
+            <ul class="lmvp-ticks">
+              <li>Charger, CPO and eMSP connectivity</li><li>Location exchange</li>
+              <li>Tariff exchange</li><li>Session exchange</li><li>CDR exchange</li>
+              <li>Status exchange</li><li>Fault reporting</li>
+              <li>Basic roaming demonstration</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h4>Deferred to national scale</h4>
+        <p class="lmvp-dim" style="margin-top:.6rem;font-size:.9rem">Each item below remains part of the national framework described earlier in this proposal.</p>
+        <ul class="lmvp-defer">
+          <li>Full national production platform</li>
+          <li>National deployment across every CPO</li>
+          <li>National certification at full scale</li>
+          <li>Full commercial roaming ecosystem</li>
+          <li>Full national payments infrastructure</li>
+          <li>Complete national charging registry</li>
+          <li>Advanced billing platform</li>
+          <li>National consumer application</li>
+          <li>ISO 15118 production implementation</li>
+          <li>Plug &amp; Charge</li>
+          <li>Vehicle-to-grid</li>
+          <li>Vehicle-to-building</li>
+          <li>Advanced smart charging</li>
+          <li>Demand response</li>
+          <li>National energy management</li>
+          <li>Cross-border African roaming</li>
+          <li>Full AI analytics</li>
+          <li>Full-scale cybersecurity operations centre</li>
+          <li>Advanced predictive analytics</li>
+          <li>Large-scale data lake</li>
+          <li>Full national enforcement infrastructure</li>
+        </ul>
+      </div>
+    </div>
+
+    <blockquote class="lmvp-quote">These are not excluded from the national vision. They are intentionally deferred until the interoperability foundation has been demonstrated.</blockquote>
+  </div>
+</div>
+
+<!-- 10. DASHBOARD MOCKUP ------------------------------------------->
+<div class="lmvp-band lmvp-band--deep">
+  <div class="lmvp-inner lmvp-stack-lg">
+    <div class="lmvp-narrow lmvp-stack">
+      <span class="lmvp-kicker">Government view</span>
+      <h3>What a minister would see</h3>
+      <p class="lmvp-dim">A single screen covering infrastructure, operations, interoperability and compliance across the pilot estate — assembled from standardised machine data rather than operator submissions.</p>
+    </div>
+
+    <figure class="lmvp-fig">
+      <div class="lmvp-dash">
+        <div class="lmvp-dash__bar">
+          <span class="lmvp-dash__title">National E-Mobility Interoperability Pilot</span>
+          <span class="lmvp-dash__stamp">ILLUSTRATIVE — SAMPLE DATA</span>
+        </div>
+        <div class="lmvp-dash__body">
+          <div class="lmvp-dash__group">
+            <h4>Participation</h4>
+            <div class="lmvp-metric"><span>Registered CPOs</span><b>3</b></div>
+            <div class="lmvp-metric"><span>Connected eMSPs</span><b>2</b></div>
+            <div class="lmvp-metric"><span>Participating stations</span><b>8</b></div>
+            <div class="lmvp-metric"><span>Registered EVSEs</span><b>14</b></div>
+          </div>
+          <div class="lmvp-dash__group">
+            <h4>Operations</h4>
+            <div class="lmvp-metric"><span>Online chargers</span><b>11</b></div>
+            <div class="lmvp-metric"><span>Offline chargers</span><b data-state="warn">2</b></div>
+            <div class="lmvp-metric"><span>Faulted chargers</span><b data-state="warn">1</b></div>
+          </div>
+          <div class="lmvp-dash__group">
+            <h4>Interoperability</h4>
+            <div class="lmvp-metric"><span>OCPI transactions</span><b>96</b></div>
+            <div class="lmvp-metric"><span>Successful tests</span><b>91</b></div>
+            <div class="lmvp-metric"><span>Failed tests</span><b data-state="warn">5</b></div>
+          </div>
+          <div class="lmvp-dash__group">
+            <h4>Compliance</h4>
+            <div class="lmvp-metric"><span>Certified</span><b>10</b></div>
+            <div class="lmvp-metric"><span>Pending certification</span><b data-state="warn">4</b></div>
+          </div>
+        </div>
+      </div>
+      <figcaption><b>Illustrative pilot dashboard.</b> Figures are examples chosen to show the shape of the interface. They do not represent current Nigerian infrastructure, any real operator, or programme performance.</figcaption>
+    </figure>
+  </div>
+</div>
+
+<!-- 11. CERTIFICATION MVP ------------------------------------------>
+<div class="lmvp-band">
+  <div class="lmvp-inner lmvp-stack-lg">
+    <div class="lmvp-narrow lmvp-stack">
+      <h3>Testing the foundation of national certification</h3>
+      <p>The pilot is also the first trial of the certification framework described earlier. Rather than standing up a regulatory enforcement system, the MVP runs a defined test suite against each class of participant and records a result.</p>
+    </div>
+
+    <div class="lmvp-grid lmvp-g3">
+      <div class="lmvp-card">
+        <h4>Charger</h4>
+        <ul class="lmvp-ticks">
+          <li>OCPP capability</li><li>Communication reliability</li>
+          <li>Required operational messages</li><li>Status reporting</li>
+          <li>Metering</li><li>Security requirements</li>
+        </ul>
+      </div>
+      <div class="lmvp-card">
+        <h4>Charge point operator</h4>
+        <ul class="lmvp-ticks">
+          <li>OCPP implementation</li><li>OCPI implementation</li>
+          <li>API security</li><li>Location data</li><li>Tariffs</li>
+          <li>Sessions</li><li>CDRs</li><li>Authentication</li>
+        </ul>
+      </div>
+      <div class="lmvp-card">
+        <h4>eMSP</h4>
+        <ul class="lmvp-ticks">
+          <li>OCPI connectivity</li><li>Location discovery</li>
+          <li>Tariff information</li><li>Session workflows</li>
+          <li>CDR processing</li><li>Roaming workflow</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="lmvp-narrow lmvp-stack">
+      <h5 class="lmvp-minihead">The certification engine returns four states</h5>
+      <div class="lmvp-states">
+        <span class="lmvp-state lmvp-state--pass">Pass</span>
+        <span class="lmvp-state lmvp-state--fail">Fail</span>
+        <span class="lmvp-state lmvp-state--cond">Conditional</span>
+        <span class="lmvp-state lmvp-state--pend">Pending</span>
+      </div>
+      <p class="lmvp-dim">Nothing more is required at pilot stage. Building a complete national regulatory enforcement system before the test criteria have been validated would be premature.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 12 & 13. SECURITY AND DATA ------------------------------------->
+<div class="lmvp-band lmvp-band--dark">
+  <div class="lmvp-inner lmvp-stack-lg">
+    <div class="lmvp-narrow lmvp-stack">
+      <span class="lmvp-kicker">Controls and data</span>
+      <h3>Secure enough for controlled testing</h3>
+      <p class="lmvp-dim">The pilot handles real operator data and real charging sessions, so it needs real controls. It is not, and is not intended to be, a substitute for the national cybersecurity framework described earlier in this proposal.</p>
+    </div>
+
+    <div class="lmvp-grid lmvp-g4">
+      <div class="lmvp-card">
+        <h4>Identity</h4>
+        <ul class="lmvp-ticks"><li>Organisation authentication</li><li>API credentials</li><li>Role-based access</li></ul>
+      </div>
+      <div class="lmvp-card">
+        <h4>API security</h4>
+        <ul class="lmvp-ticks"><li>TLS</li><li>Authentication</li><li>Authorisation</li><li>Rate limiting</li><li>Input validation</li></ul>
+      </div>
+      <div class="lmvp-card">
+        <h4>Monitoring</h4>
+        <ul class="lmvp-ticks"><li>Audit logs</li><li>API logs</li><li>Error monitoring</li><li>Security events</li></ul>
+      </div>
+      <div class="lmvp-card">
+        <h4>Data</h4>
+        <ul class="lmvp-ticks"><li>Encryption</li><li>Backups</li><li>Access control</li><li>Data retention rules</li></ul>
+      </div>
+    </div>
+
+    <div class="lmvp-grid lmvp-g2" style="align-items:start">
+      <div class="lmvp-stack">
+        <h4>Pilot data model</h4>
+        <p class="lmvp-dim">Deliberately simple, and deliberately shaped so it can extend into the full National EV Charging Station Registry rather than being replaced by it. The entities below are the same entities the national registry will hold; the pilot simply holds fewer attributes of each.</p>
+      </div>
+      <pre class="lmvp-tree" aria-label="Data model: an organisation is a CPO, eMSP or manufacturer. A CPO has locations, each with EVSEs, each with connectors. An EVSE has status, sessions and CDRs. An organisation has certification records covering OCPP, OCPI and compliance.">Organisation
+   │
+   ├── CPO
+   ├── eMSP
+   └── Manufacturer
+
+CPO
+ │
+ └── Location
+       │
+       └── EVSE
+             │
+             └── Connector
+
+EVSE
+ │
+ ├── Status
+ ├── Sessions
+ └── CDRs
+
+Organisation
+ │
+ └── Certification
+       │
+       ├── OCPP
+       ├── OCPI
+       └── Compliance</pre>
+    </div>
+  </div>
+</div>
+
+<!-- 14. TECHNOLOGY STACK ------------------------------------------->
+<div class="lmvp-band lmvp-band--tint">
+  <div class="lmvp-inner lmvp-stack-lg">
+    <div class="lmvp-narrow lmvp-stack">
+      <h3>A pragmatic technology basis</h3>
+      <p>The pilot should be built on widely supported, well-documented technology with a deep local and international skills base, so that maintenance and future procurement are not tied to scarce expertise.</p>
+    </div>
+
+    <div class="lmvp-tablewrap">
+      <table class="lmvp-table lmvp-table--stack">
+        <thead>
+          <tr><th scope="col">Layer</th><th scope="col">Indicative approach</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Frontend</td><td>React / Next.js</td></tr>
+          <tr><td>Backend</td><td>Node.js with TypeScript and NestJS</td></tr>
+          <tr><td>Database</td><td>PostgreSQL with PostGIS</td></tr>
+          <tr><td>APIs</td><td>REST</td></tr>
+          <tr><td>Interoperability</td><td>OCPP and OCPI</td></tr>
+          <tr><td>Authentication</td><td>OAuth 2.0 or equivalent secure API authentication</td></tr>
+          <tr><td>Infrastructure</td><td>Cloud deployment</td></tr>
+          <tr><td>Monitoring</td><td>Centralised application and API logging</td></tr>
+          <tr><td>Mapping</td><td>Google Maps, Mapbox or equivalent</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="lmvp-note">The exact technology stack should be confirmed through the technical procurement and architecture process. Nothing here commits government to a particular commercial vendor, product or supplier, and the named technologies are illustrative of a category rather than a selection.</p>
+  </div>
+</div>
+
+<!-- 15. TIMELINE --------------------------------------------------->
+<div class="lmvp-band">
+  <div class="lmvp-inner lmvp-stack-lg">
+    <div class="lmvp-narrow lmvp-stack">
+      <span class="lmvp-kicker">Indicative delivery programme</span>
+      <h3>Twelve to sixteen weeks from definition to evaluation</h3>
+      <p>Phases overlap deliberately. Integration with participant systems begins while the platform is still being built, because integration is where the real findings emerge.</p>
+    </div>
+
+    <ol class="lmvp-timeline">
+      <li>
+        <span class="lmvp-timeline__weeks">Weeks 1–2</span>
+        <h4>Programme definition</h4>
+        <p class="lmvp-dim">Confirm pilot scope, participants, technical requirements and governance. Define the test cases against which everything will later be judged.</p>
+      </li>
+      <li>
+        <span class="lmvp-timeline__weeks">Weeks 2–4</span>
+        <h4>Architecture and design</h4>
+        <p class="lmvp-dim">Technical architecture, data model, API specifications, registry design and dashboard design.</p>
+      </li>
+      <li>
+        <span class="lmvp-timeline__weeks">Weeks 4–8</span>
+        <h4>Platform development</h4>
+        <p class="lmvp-dim">Registration, registry, gateway, APIs, authentication and dashboard.</p>
+      </li>
+      <li>
+        <span class="lmvp-timeline__weeks">Weeks 6–10</span>
+        <h4>Interoperability integration</h4>
+        <p class="lmvp-dim">OCPP testing, OCPI integration, and connection of participating CPO, eMSP and charger systems.</p>
+      </li>
+      <li>
+        <span class="lmvp-timeline__weeks">Weeks 9–12</span>
+        <h4>Testing</h4>
+        <p class="lmvp-dim">Functional, security, interoperability, CDR and failure testing.</p>
+      </li>
+      <li>
+        <span class="lmvp-timeline__weeks">Weeks 12–14</span>
+        <h4>Controlled pilot</h4>
+        <p class="lmvp-dim">Participant onboarding, live test scenarios, certification tests and monitoring.</p>
+      </li>
+      <li>
+        <span class="lmvp-timeline__weeks">Weeks 14–16</span>
+        <h4>Evaluation</h4>
+        <p class="lmvp-dim">Pilot report, gap analysis, standards recommendations, national-scale roadmap and procurement recommendations.</p>
+      </li>
+    </ol>
+  </div>
+</div>
+
+<!-- 16. COST ------------------------------------------------------->
+<div class="lmvp-band lmvp-band--tint">
+  <div class="lmvp-inner lmvp-stack-lg">
+    <div class="lmvp-narrow lmvp-stack">
+      <h3>Indicative planning budget</h3>
+      <p>The figures below are planning estimates prepared to support a funding decision. They are not quotations, tenders or government-approved costs.</p>
+    </div>
+
+    <div class="lmvp-costrange">
+      <div><span>Lean range</span><b>$75k–$150k</b></div>
+      <div><span>Recommended planning range</span><b>$100k–$125k</b></div>
+      <div><span>Recommended planning budget</span><b>~$110k</b></div>
+    </div>
+
+    <div class="lmvp-tablewrap">
+      <table class="lmvp-table lmvp-table--stack">
+        <caption><b>Indicative planning estimate.</b> Workstream allocation for a single controlled pilot.</caption>
+        <thead>
+          <tr><th scope="col">Workstream</th><th scope="col" class="num">Indicative budget</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Programme and technical discovery</td><td class="num" data-label="Indicative">$10,000</td></tr>
+          <tr><td>Architecture and standards design</td><td class="num" data-label="Indicative">$12,000</td></tr>
+          <tr><td>UX/UI and dashboard design</td><td class="num" data-label="Indicative">$7,000</td></tr>
+          <tr><td>Registry platform</td><td class="num" data-label="Indicative">$12,000</td></tr>
+          <tr><td>Interoperability gateway</td><td class="num" data-label="Indicative">$20,000</td></tr>
+          <tr><td>OCPP and OCPI integration</td><td class="num" data-label="Indicative">$15,000</td></tr>
+          <tr><td>Government dashboard</td><td class="num" data-label="Indicative">$8,000</td></tr>
+          <tr><td>Security and testing</td><td class="num" data-label="Indicative">$8,000</td></tr>
+          <tr><td>Cloud, DevOps and deployment</td><td class="num" data-label="Indicative">$5,000</td></tr>
+          <tr><td>Pilot integration support</td><td class="num" data-label="Indicative">$6,000</td></tr>
+          <tr><td>Documentation and evaluation</td><td class="num" data-label="Indicative">$4,000</td></tr>
+          <tr><td>Contingency</td><td class="num" data-label="Indicative">$8,000</td></tr>
+        </tbody>
+        <tfoot>
+          <tr><td>Indicative total</td><td class="num" data-label="Indicative total">~$115,000</td></tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <div class="lmvp-narrow lmvp-stack">
+      <p class="lmvp-note"><b>Indicative planning estimate only.</b> Final cost depends on the procurement model, participant requirements, integration complexity, hosting and security requirements, government procurement rules, certification scope, the technical standards selected, and the number of participating organisations. These figures have not been approved by any government body.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 17. MVP VS NATIONAL -------------------------------------------->
+<div class="lmvp-band lmvp-band--dark">
+  <div class="lmvp-inner lmvp-stack-lg">
+    <div class="lmvp-narrow lmvp-stack">
+      <h3>Pilot and national programme, side by side</h3>
+      <p class="lmvp-dim">Every capability in the pilot column is a scaled-down instance of the national capability beside it. Nothing in the pilot is a dead end, and nothing in the national column has been dropped.</p>
+    </div>
+
+    <div class="lmvp-tablewrap">
+      <table class="lmvp-table lmvp-table--stack">
+        <thead>
+          <tr><th scope="col">Capability</th><th scope="col">Lean MVP / pilot</th><th scope="col">Full national programme</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Governance</td><td data-label="Pilot"><span class="lmvp-tag lmvp-tag--pilot">Pilot governance</span></td><td data-label="National"><span class="lmvp-tag lmvp-tag--nat">National governance</span></td></tr>
+          <tr><td>Participant registration</td><td data-label="Pilot"><span class="lmvp-tag lmvp-tag--yes">✓ Included</span></td><td data-label="National"><span class="lmvp-tag lmvp-tag--yes">✓ Included</span></td></tr>
+          <tr><td>Charging registry</td><td data-label="Pilot"><span class="lmvp-tag lmvp-tag--pilot">Pilot registry</span></td><td data-label="National"><span class="lmvp-tag lmvp-tag--nat">National registry</span></td></tr>
+          <tr><td>OCPP</td><td data-label="Pilot"><span class="lmvp-tag lmvp-tag--pilot">Demonstration</span></td><td data-label="National"><span class="lmvp-tag lmvp-tag--nat">National requirement</span></td></tr>
+          <tr><td>OCPI</td><td data-label="Pilot"><span class="lmvp-tag lmvp-tag--pilot">Demonstration</span></td><td data-label="National"><span class="lmvp-tag lmvp-tag--nat">National interoperability</span></td></tr>
+          <tr><td>CPO integration</td><td data-label="Pilot"><span class="lmvp-tag lmvp-tag--pilot">Limited</span></td><td data-label="National"><span class="lmvp-tag lmvp-tag--nat">National</span></td></tr>
+          <tr><td>eMSP integration</td><td data-label="Pilot"><span class="lmvp-tag lmvp-tag--pilot">Limited</span></td><td data-label="National"><span class="lmvp-tag lmvp-tag--nat">National</span></td></tr>
+          <tr><td>Monitoring</td><td data-label="Pilot"><span class="lmvp-tag lmvp-tag--pilot">Pilot dashboard</span></td><td data-label="National"><span class="lmvp-tag lmvp-tag--nat">National dashboard</span></td></tr>
+          <tr><td>Certification</td><td data-label="Pilot"><span class="lmvp-tag lmvp-tag--pilot">Pilot testing</span></td><td data-label="National"><span class="lmvp-tag lmvp-tag--nat">National certification</span></td></tr>
+          <tr><td>Roaming</td><td data-label="Pilot"><span class="lmvp-tag lmvp-tag--pilot">Controlled demonstration</span></td><td data-label="National"><span class="lmvp-tag lmvp-tag--nat">National roaming</span></td></tr>
+          <tr><td>Payments</td><td data-label="Pilot"><span class="lmvp-tag lmvp-tag--pilot">Test / reconciliation</span></td><td data-label="National"><span class="lmvp-tag lmvp-tag--nat">Full ecosystem</span></td></tr>
+          <tr><td>Cybersecurity</td><td data-label="Pilot"><span class="lmvp-tag lmvp-tag--pilot">MVP controls</span></td><td data-label="National"><span class="lmvp-tag lmvp-tag--nat">National framework</span></td></tr>
+          <tr><td>Reliability monitoring</td><td data-label="Pilot"><span class="lmvp-tag lmvp-tag--pilot">Basic</span></td><td data-label="National"><span class="lmvp-tag lmvp-tag--nat">National</span></td></tr>
+          <tr><td>ISO 15118</td><td data-label="Pilot"><span class="lmvp-tag lmvp-tag--future">— Not in pilot</span></td><td data-label="National"><span class="lmvp-tag lmvp-tag--future">Future phase</span></td></tr>
+          <tr><td>Plug &amp; Charge</td><td data-label="Pilot"><span class="lmvp-tag lmvp-tag--future">— Not in pilot</span></td><td data-label="National"><span class="lmvp-tag lmvp-tag--future">Future phase</span></td></tr>
+          <tr><td>Smart charging</td><td data-label="Pilot"><span class="lmvp-tag lmvp-tag--future">— Not in pilot</span></td><td data-label="National"><span class="lmvp-tag lmvp-tag--future">Future phase</span></td></tr>
+          <tr><td>Vehicle-to-grid</td><td data-label="Pilot"><span class="lmvp-tag lmvp-tag--future">— Not in pilot</span></td><td data-label="National"><span class="lmvp-tag lmvp-tag--future">Future phase</span></td></tr>
+          <tr><td>Cross-border interoperability</td><td data-label="Pilot"><span class="lmvp-tag lmvp-tag--future">— Not in pilot</span></td><td data-label="National"><span class="lmvp-tag lmvp-tag--future">Future phase</span></td></tr>
+          <tr><td>National enforcement</td><td data-label="Pilot"><span class="lmvp-tag lmvp-tag--future">— Not in pilot</span></td><td data-label="National"><span class="lmvp-tag lmvp-tag--future">Future phase</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- 18. ROADMAP POSITION ------------------------------------------->
+<div class="lmvp-band">
+  <div class="lmvp-inner lmvp-stack-lg">
+    <div class="lmvp-narrow lmvp-stack">
+      <h3>Where the pilot sits in the five-year roadmap</h3>
+      <p>The four-phase national roadmap set out earlier in this proposal is unchanged. Phase 1 remains Foundation at 0–12 months, Phase 2 the national pilot at 12–24 months, Phase 3 national scale at 24–36 months, and Phase 4 advanced electric mobility across three to five years.</p>
+      <p>The Lean MVP is an accelerated technical demonstration inside the early Foundation and Pilot stages. It does not extend the roadmap, and it does not sit outside it. It brings forward the evidence on which Phase 2 and Phase 3 decisions will depend.</p>
+    </div>
+
+    <figure class="lmvp-fig">
+      <ol class="lmvp-ladder">
+        <li><span>National framework</span></li>
+        <li><span>Policy &amp; governance</span></li>
+        <li data-here="true"><span>Lean MVP / sandbox</span><em>This section</em></li>
+        <li data-here="true"><span>Interoperability proof</span><em>This section</em></li>
+        <li><span>National pilot</span></li>
+        <li><span>National scale</span></li>
+        <li><span>Advanced e-mobility</span></li>
+      </ol>
+      <figcaption>The Lean MVP occupies two rungs of an existing ladder. It replaces none of them.</figcaption>
+    </figure>
+  </div>
+</div>
+
+<!-- 19 & 20. SUCCESS ----------------------------------------------->
+<div class="lmvp-band lmvp-band--deep">
+  <div class="lmvp-inner lmvp-stack-lg">
+    <div class="lmvp-narrow lmvp-stack">
+      <span class="lmvp-kicker">Evaluation</span>
+      <h3>What the Lean MVP must prove</h3>
+      <p class="lmvp-dim">Six questions, each answerable from the pilot itself rather than from projection or precedent elsewhere.</p>
+    </div>
+
+    <div class="lmvp-grid lmvp-g3">
+      <div class="lmvp-card"><h4>Technical</h4><p>Can different charger and software systems communicate?</p></div>
+      <div class="lmvp-card"><h4>Operational</h4><p>Can charging sessions move correctly across systems?</p></div>
+      <div class="lmvp-card"><h4>Commercial</h4><p>Can different operators support interoperable charging without giving up control of their businesses?</p></div>
+      <div class="lmvp-card"><h4>Regulatory</h4><p>Can government monitor compliance without becoming the operator?</p></div>
+      <div class="lmvp-card"><h4>Data</h4><p>Can government obtain a reliable national-level view of infrastructure?</p></div>
+      <div class="lmvp-card"><h4>Investment</h4><p>Can an open technical framework reduce fragmentation and make the Nigerian market easier to invest in?</p></div>
+    </div>
+
+    <div class="lmvp-narrow lmvp-stack">
+      <h4>How results are recorded</h4>
+      <p class="lmvp-dim">The pilot deliberately avoids numerical performance targets, which would have to be invented before any baseline exists. Results are recorded qualitatively against defined workflows.</p>
+    </div>
+
+    <div class="lmvp-grid lmvp-g4">
+      <div class="lmvp-card"><h4 class="lmvp-state lmvp-state--pass">Pass</h4><p>A participating system successfully completes the required interoperability workflow.</p></div>
+      <div class="lmvp-card"><h4 class="lmvp-state lmvp-state--fail">Fail</h4><p>A required interoperability workflow cannot be completed.</p></div>
+      <div class="lmvp-card"><h4 class="lmvp-state lmvp-state--cond">Conditional</h4><p>The system works but requires remediation.</p></div>
+      <div class="lmvp-card"><h4 class="lmvp-state lmvp-state--pend">Certified</h4><p>The participant satisfies the defined pilot requirements.</p></div>
+    </div>
+
+    <figure class="lmvp-fig">
+      <div class="lmvp-card" style="padding:1.6rem">
+        <h4 style="margin-bottom:1rem">Pilot scorecard — target state</h4>
+        <ul class="lmvp-scorecard">
+          <li>OCPP connectivity <b>✓</b></li>
+          <li>OCPI connectivity <b>✓</b></li>
+          <li>Location exchange <b>✓</b></li>
+          <li>Tariff exchange <b>✓</b></li>
+          <li>Session exchange <b>✓</b></li>
+          <li>CDR exchange <b>✓</b></li>
+          <li>Status monitoring <b>✓</b></li>
+          <li>Fault reporting <b>✓</b></li>
+          <li>Certification workflow <b>✓</b></li>
+          <li>National dashboard <b>✓</b></li>
+        </ul>
+      </div>
+      <figcaption><b>Illustrative target-state scorecard.</b> This shows the condition the pilot is designed to reach. It is not a record of results, and no testing has taken place.</figcaption>
+    </figure>
+  </div>
+</div>
+
+<!-- 21. STRATEGIC VALUE -------------------------------------------->
+<div class="lmvp-band lmvp-band--tint">
+  <div class="lmvp-inner lmvp-stack-lg">
+    <div class="lmvp-narrow lmvp-stack">
+      <h3>Strategic value to government</h3>
+      <p>The pilot is not only a technical exercise. It changes the basis on which the national programme is decided, funded and procured.</p>
+    </div>
+
+    <div class="lmvp-grid lmvp-g3">
+      <div class="lmvp-card lmvp-card--gold"><h4>Lower initial risk</h4><p>Government validates the model before committing to national deployment.</p></div>
+      <div class="lmvp-card lmvp-card--gold"><h4>Lower initial cost</h4><p>Only the minimum technical infrastructure is built in the first instance.</p></div>
+      <div class="lmvp-card lmvp-card--gold"><h4>Faster demonstration</h4><p>Interoperability can be shown within months, rather than waiting for a full national programme to complete.</p></div>
+      <div class="lmvp-card lmvp-card--gold"><h4>Industry participation</h4><p>Private-sector operators help shape the national standard rather than receiving it.</p></div>
+      <div class="lmvp-card lmvp-card--gold"><h4>Evidence-based policy</h4><p>Decisions rest on actual interoperability testing against real hardware and real platforms.</p></div>
+      <div class="lmvp-card lmvp-card--gold"><h4>Investment confidence</h4><p>A functioning interoperability framework signals that Nigeria is building an open market, not fragmented technology islands.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- 22 & 23. ROLES AND POLICY POSITION ----------------------------->
+<div class="lmvp-band lmvp-band--dark">
+  <div class="lmvp-inner lmvp-stack-lg">
+    <div class="lmvp-narrow lmvp-stack">
+      <span class="lmvp-kicker">Roles</span>
+      <h3>Two roles that must not be confused</h3>
+    </div>
+
+    <div class="lmvp-split">
+      <div class="lmvp-split--gov">
+        <h4>Government establishes</h4>
+        <ul class="lmvp-ticks">
+          <li>Standards</li><li>Rules</li><li>Certification</li><li>Registry</li>
+          <li>Monitoring</li><li>Compliance</li><li>Consumer protection</li>
+          <li>The interoperability framework</li>
+        </ul>
+      </div>
+      <div>
+        <h4>The private sector builds and operates</h4>
+        <ul class="lmvp-ticks">
+          <li>Chargers</li><li>Charging networks</li><li>CPO platforms</li><li>eMSPs</li>
+          <li>Payment services</li><li>Energy systems</li><li>Fleet services</li>
+          <li>Consumer applications</li><li>Technology platforms</li>
+        </ul>
+      </div>
+    </div>
+
+    <blockquote class="lmvp-quote">Government should establish the rules and standards; the private sector should build and operate the market.</blockquote>
+
+    <div class="lmvp-narrow lmvp-stack">
+      <h4>The pilot must not create a private national platform</h4>
+      <p class="lmvp-dim">The Lean MVP is government-led. It may be privately developed or procured, and it must remain open to multiple technology providers. Specifications, interfaces and test criteria produced during the pilot should be published so that any qualified supplier can build against them.</p>
+      <p class="lmvp-dim">Nothing in this section should be read as proposing an exclusive vendor, proprietary national technology, a monopoly position, or a single CPO, eMSP or hardware manufacturer. A pilot that produced any of those outcomes would have failed on its own terms, because the objective is an open national framework.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 24. INTERNATIONAL PARTICIPATION -------------------------------->
+<div class="lmvp-band">
+  <div class="lmvp-inner lmvp-stack-lg">
+    <div class="lmvp-narrow lmvp-stack">
+      <h3>A signal to the international market</h3>
+      <p>A working interoperability pilot is evidence that can be shown to international charging companies, vehicle and charger manufacturers, energy companies, infrastructure investors, technology companies and financial institutions.</p>
+      <p>For each of them, the question about an emerging EV market is the same: will the systems we deploy here still work in three years, or will we be asked to rebuild them for every network we join?</p>
+      <blockquote class="lmvp-quote">Nigeria is establishing the rules and technical architecture that allow multiple companies to participate without rebuilding incompatible systems.</blockquote>
+      <p class="lmvp-note">No commitments, partnerships, letters of intent or expressions of interest from any company, investor or institution are claimed or implied anywhere in this section.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 25. IMPLEMENTATION PATH ---------------------------------------->
+<div class="lmvp-band lmvp-band--deep">
+  <div class="lmvp-inner lmvp-stack-lg">
+    <div class="lmvp-narrow lmvp-stack">
+      <span class="lmvp-kicker">National implementation path</span>
+      <h3>Ten steps, in order</h3>
+      <p class="lmvp-dim">The Lean MVP is step five. It is small, specific and immediately actionable — which is what makes the nine steps around it executable rather than theoretical.</p>
+    </div>
+
+    <ol class="lmvp-path">
+      <li><span>Policy approval</span></li>
+      <li><span>Working group established</span></li>
+      <li><span>Industry assessment</span></li>
+      <li><span>Technical specification</span></li>
+      <li data-here="true"><span>Lean interoperability MVP</span><span class="lmvp-path__here">this section</span></li>
+      <li><span>Controlled national pilot</span></li>
+      <li><span>Certification framework</span></li>
+      <li><span>National registry</span></li>
+      <li><span>National rollout</span></li>
+      <li><span>Advanced electric mobility</span></li>
+    </ol>
+  </div>
+</div>
+
+<!-- 26. FINAL RECOMMENDATION --------------------------------------->
+<div class="lmvp-band lmvp-band--tint">
+  <div class="lmvp-inner lmvp-stack-lg">
+    <div class="lmvp-narrow lmvp-stack">
+      <h3>Recommended starting point</h3>
+      <p>The Federal Government does not need to implement the entire national framework simultaneously. The recommended sequence is deliberately short.</p>
+    </div>
+
+    <ol class="lmvp-steps-final">
+      <li>Establish the policy.</li>
+      <li>Build a controlled interoperability sandbox.</li>
+      <li>Connect a small number of real participants.</li>
+      <li>Demonstrate OCPP and OCPI interoperability.</li>
+      <li>Test monitoring and certification.</li>
+      <li>Evaluate the results.</li>
+      <li>Then scale nationally.</li>
+    </ol>
+
+    <div class="lmvp-narrow lmvp-stack">
+      <blockquote class="lmvp-quote">Prove the interoperability model first. Scale the national infrastructure second.</blockquote>
+      <p>The long-term objective set out throughout this proposal is unchanged: an open, connected, safe, transparent and investment-ready electric mobility ecosystem for Nigeria, built on common standards, a national registry, certification and monitoring, and extending in time to ISO 15118, Plug &amp; Charge, smart charging, vehicle-to-grid and cross-border African interoperability.</p>
+      <blockquote class="lmvp-quote">The Lean MVP is not the destination. It is the fastest credible path toward a national interoperable electric mobility ecosystem.</blockquote>
+    </div>
+  </div>
+</div>
+
+</section>
+<!-- ============ END LEAN MVP SECTION ============ -->
+
+<script>
+(function(){
+  var root = document.getElementById('lean-mvp');
+  if(!root) return;
+  var list = root.querySelector('[data-flow="list"]');
+  var progress = root.querySelector('[data-flow="progress"]');
+  if(!list || !progress) return;
+
+  var steps = Array.prototype.slice.call(list.children);
+  var nodes = Array.prototype.slice.call(root.querySelectorAll('.lmvp-node'));
+  var links = Array.prototype.slice.call(root.querySelectorAll('.lmvp-link'));
+  var labels = Array.prototype.slice.call(root.querySelectorAll('.lmvp-linklabel'));
+  var prevBtn = root.querySelector('[data-flow="prev"]');
+  var nextBtn = root.querySelector('[data-flow="next"]');
+  var resetBtn = root.querySelector('[data-flow="reset"]');
+  var i = 0;
+
+  function parse(el, attr){
+    var v = el.getAttribute(attr);
+    return v ? v.split(',') : [];
+  }
+
+  function render(){
+    var step = steps[i];
+    var on = parse(step, 'data-nodes');
+    var onLinks = parse(step, 'data-links');
+
+    steps.forEach(function(li, n){
+      if(n === i){ li.setAttribute('aria-current','step'); }
+      else { li.removeAttribute('aria-current'); }
+      li.setAttribute('data-done', n < i ? 'true' : 'false');
+    });
+
+    nodes.forEach(function(g){
+      var active = on.indexOf(g.getAttribute('data-node')) > -1;
+      g.classList.toggle('lmvp-node--on', active);
+      g.classList.toggle('lmvp-node--off', !active);
+    });
+    links.forEach(function(g){
+      g.classList.toggle('lmvp-link--on', onLinks.indexOf(g.getAttribute('data-link')) > -1);
+    });
+    labels.forEach(function(t){
+      t.classList.toggle('lmvp-linklabel--on', onLinks.indexOf(t.getAttribute('data-link')) > -1);
+    });
+
+    progress.textContent = 'Step ' + (i + 1) + ' of ' + steps.length;
+    if(prevBtn) prevBtn.disabled = (i === 0);
+    if(nextBtn) nextBtn.disabled = (i === steps.length - 1);
+  }
+
+  function go(n){
+    i = Math.max(0, Math.min(steps.length - 1, n));
+    render();
+  }
+
+  if(prevBtn) prevBtn.addEventListener('click', function(){ go(i - 1); });
+  if(nextBtn) nextBtn.addEventListener('click', function(){ go(i + 1); });
+  if(resetBtn) resetBtn.addEventListener('click', function(){ go(0); });
+
+  // Click-to-jump is a pointer convenience. Keyboard users step with the
+  // Previous / Next / Restart buttons, so the list keeps its list semantics.
+  steps.forEach(function(li, n){
+    li.addEventListener('click', function(){ go(n); });
+  });
+
+  render();
+})();
+</script>
+
+</body>
+</html>
